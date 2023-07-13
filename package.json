@@ -1,0 +1,43 @@
+{
+  "name": "drupal-next",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "next": "^13.4"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./Entity/*": {
+      "import": "./dist/Entity/*.js",
+      "require": "./dist/Entity/*.d.ts"
+    },
+    "./Components/*": {
+      "import": "./dist/Components/*.jsx",
+      "require": "./dist/Components/*.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client.js",
+      "require": "./dist/client.d.ts"
+    }
+  }
+}
