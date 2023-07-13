@@ -1,4 +1,4 @@
-import {JsonApiResource} from "./JsonApi";
+import {JsonApiResource, JsonApiResponse} from "./JsonApi";
 import {DrupalEntity, DrupalEntityInterface} from "./DrupalEntity";
 import {DrupalClient} from "../client";
 
@@ -27,40 +27,30 @@ export class DrupalFile extends DrupalEntity implements DrupalFileInterface {
         absolutePath: null,
     }
 
-    key_conversions = {
+    override key_conversions = {
         'drupal_internal__fid': 'fid',
     };
 
-    constructor(resource: JsonApiResource) {
-        super();
+    constructor(resource: JsonApiResponse | JsonApiResource) {
+        super(resource);
         this.uri = {
             value: null,
             url: null,
             absolutePath: null,
         }
-        // Fill all resource properties.
-        Object.keys(resource).forEach(key => {
-            if (this.hasOwnProperty(key)) {
-                if (key === 'type') {
-                    this.bundle = resource[key].split('--')[1] ?? null;
-                }
-                this[key] = resource[key];
-            }
-        });
-        // Fill all attributes.
-        Object.keys(resource.attributes).forEach(key => {
-            let internalKey = key;
-            if (key in this.key_conversions) {
-                internalKey = this.key_conversions[key];
-            }
+        this.fill(resource);
 
-            if (this.hasOwnProperty(internalKey)) {
-                this[internalKey] = resource.attributes[key];
-            }
-        });
+
         // Add absolute url to file.
         const drupalConfig = DrupalClient.getConfig();
-        this.uri.absolutePath = drupalConfig.protocol + drupalConfig.host + resource.attributes.uri.url;
+        let fileUrl = '';
+        if ("data" in resource) {
+            const res = <JsonApiResource>resource.data;
+            fileUrl = res.attributes.uri.url
+        } else {
+            fileUrl = resource.attributes.uri.url
+        }
+        this.uri.absolutePath = drupalConfig.protocol + drupalConfig.host + fileUrl;
     }
 
     getAbsolutePath(): string | null {

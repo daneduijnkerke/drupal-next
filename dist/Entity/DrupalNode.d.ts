@@ -1,4 +1,4 @@
-import { JsonApiResponse } from "./JsonApi";
+import { JsonApiResource, JsonApiResponse } from "./JsonApi";
 import { DrupalEntity, DrupalEntityInterface } from "./DrupalEntity";
 export interface DrupalNodeInterface extends DrupalEntityInterface {
     nid: string | null;
@@ -16,5 +16,5 @@ export declare class DrupalNode extends DrupalEntity implements DrupalNodeInterf
     key_conversions: {
         drupal_internal__nid: string;
     };
-    constructor(resource: JsonApiResponse);
+    constructor(resource: JsonApiResponse | JsonApiResource);
 }

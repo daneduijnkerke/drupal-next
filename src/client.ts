@@ -4,6 +4,8 @@ import {DrupalMedia} from "./Entity/DrupalMedia";
 import {DrupalParagraph} from "./Entity/DrupalParagraph";
 import {notFound} from "next/navigation";
 import fs from "fs";
+import {DrupalMenuItem} from "./Entity/DrupalMenuItem";
+import {DrupalEntityCollection} from "./Entity/DrupalEntityCollection";
 
 export class DrupalClient {
     public protocol: string
@@ -57,14 +59,12 @@ export class DrupalClient {
 
     async getNode(type: string, id: string): Promise<DrupalNode> {
         const response = await this.getResource('node/' + type, id);
-        let node = new DrupalNode(response);
-        return node;
+        return new DrupalNode(response);
     }
 
     async getParagraph(type: string, id: string): Promise<DrupalParagraph> {
         const response = await this.getResource('paragraph/' + type, id);
-        let paragraph = new DrupalParagraph(response);
-        return paragraph;
+        return new DrupalParagraph(response);
     }
 
     async getMedia(type: string, id: string): Promise<DrupalMedia> {
@@ -73,8 +73,20 @@ export class DrupalClient {
             // 'fields[file--file]': 'uri,url,filename,filemime,filesize,status,id,drupal_internal__fid'
         };
         const response = await this.getResource('media/' + type, id, options);
-        let media = new DrupalMedia(response);
-        return media;
+        return new DrupalMedia(response);
+    }
+
+    async getMenu(id: string): Promise<DrupalEntityCollection<DrupalMenuItem>> {
+        const options = {
+            'filter[menu_name][value]': id,
+            'sort': 'weight'
+        };
+        const response = await this.getResource('menu_items', '', options);
+        return new DrupalEntityCollection('menu_items', response, DrupalMenuItem);
+    }
+    async getMenuItem(id: string): Promise<DrupalMenuItem> {
+        const response = await this.getResource('menu_items', id);
+        return new DrupalMenuItem(response);
     }
 
     async resolveNode(path: string): Promise<DrupalNode> {

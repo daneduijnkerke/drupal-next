@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { DrupalClient } from "../client";
 export class DrupalEntity {
-    constructor() {
+    constructor(resource) {
         this.id = null;
         this.type = null;
         this.bundle = null;
@@ -19,6 +19,8 @@ export class DrupalEntity {
         this.changed = null;
         this.created = null;
         this.fields = {};
+        this.key_conversions = {};
+        this.fill(resource);
     }
     has(field) {
         return this.fields.hasOwnProperty(field);
@@ -70,5 +72,44 @@ export class DrupalEntity {
             }
             return entity;
         });
+    }
+    fill(res) {
+        let resource = res;
+        if ("data" in res && !Array.isArray(res.data)) {
+            resource = res.data;
+        }
+        Object.keys(resource).forEach(key => {
+            var _a;
+            if (this.hasOwnProperty(key)) {
+                if (key === 'type') {
+                    this.bundle = (_a = resource[key].split('--')[1]) !== null && _a !== void 0 ? _a : null;
+                }
+                this[key] = resource[key];
+            }
+        });
+        if (resource.hasOwnProperty('attributes')) {
+            Object.keys(resource['attributes']).forEach(key => {
+                let internalKey = key;
+                if (key === 'body') {
+                    this.fields[key] = resource['attributes'][key];
+                }
+                if (key in this.key_conversions) {
+                    internalKey = this.key_conversions[key];
+                }
+                if (this.hasOwnProperty(internalKey)) {
+                    this[internalKey] = resource['attributes'][key];
+                }
+                if (key.startsWith('field_')) {
+                    this.fields[key] = resource['attributes'][key];
+                }
+            });
+        }
+        if (resource.hasOwnProperty('relationships')) {
+            Object.keys(resource['relationships']).forEach(key => {
+                if (key.startsWith('field_')) {
+                    this.fields[key] = resource['relationships'][key];
+                }
+            });
+        }
     }
 }

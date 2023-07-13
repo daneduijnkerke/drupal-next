@@ -12,6 +12,8 @@ import { DrupalMedia } from "./Entity/DrupalMedia";
 import { DrupalParagraph } from "./Entity/DrupalParagraph";
 import { notFound } from "next/navigation";
 import fs from "fs";
+import { DrupalMenuItem } from "./Entity/DrupalMenuItem";
+import { DrupalEntityCollection } from "./Entity/DrupalEntityCollection";
 export class DrupalClient {
     constructor() {
         // const conf = DrupalClient.getConfig();
@@ -54,15 +56,13 @@ export class DrupalClient {
     getNode(type, id) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.getResource('node/' + type, id);
-            let node = new DrupalNode(response);
-            return node;
+            return new DrupalNode(response);
         });
     }
     getParagraph(type, id) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.getResource('paragraph/' + type, id);
-            let paragraph = new DrupalParagraph(response);
-            return paragraph;
+            return new DrupalParagraph(response);
         });
     }
     getMedia(type, id) {
@@ -72,8 +72,23 @@ export class DrupalClient {
                 // 'fields[file--file]': 'uri,url,filename,filemime,filesize,status,id,drupal_internal__fid'
             };
             const response = yield this.getResource('media/' + type, id, options);
-            let media = new DrupalMedia(response);
-            return media;
+            return new DrupalMedia(response);
+        });
+    }
+    getMenu(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const options = {
+                'filter[menu_name][value]': id,
+                'sort': 'weight'
+            };
+            const response = yield this.getResource('menu_items', '', options);
+            return new DrupalEntityCollection('menu_items', response, DrupalMenuItem);
+        });
+    }
+    getMenuItem(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.getResource('menu_items', id);
+            return new DrupalMenuItem(response);
         });
     }
     resolveNode(path) {

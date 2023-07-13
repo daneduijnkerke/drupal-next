@@ -2,7 +2,7 @@ import { DrupalEntity } from "./DrupalEntity";
 import { DrupalClient } from "../client";
 export class DrupalFile extends DrupalEntity {
     constructor(resource) {
-        super();
+        super(resource);
         this.fid = null;
         this.filename = null;
         this.filemime = null;
@@ -20,29 +20,18 @@ export class DrupalFile extends DrupalEntity {
             url: null,
             absolutePath: null,
         };
-        // Fill all resource properties.
-        Object.keys(resource).forEach(key => {
-            var _a;
-            if (this.hasOwnProperty(key)) {
-                if (key === 'type') {
-                    this.bundle = (_a = resource[key].split('--')[1]) !== null && _a !== void 0 ? _a : null;
-                }
-                this[key] = resource[key];
-            }
-        });
-        // Fill all attributes.
-        Object.keys(resource.attributes).forEach(key => {
-            let internalKey = key;
-            if (key in this.key_conversions) {
-                internalKey = this.key_conversions[key];
-            }
-            if (this.hasOwnProperty(internalKey)) {
-                this[internalKey] = resource.attributes[key];
-            }
-        });
+        this.fill(resource);
         // Add absolute url to file.
         const drupalConfig = DrupalClient.getConfig();
-        this.uri.absolutePath = drupalConfig.protocol + drupalConfig.host + resource.attributes.uri.url;
+        let fileUrl = '';
+        if ("data" in resource) {
+            const res = resource.data;
+            fileUrl = res.attributes.uri.url;
+        }
+        else {
+            fileUrl = resource.attributes.uri.url;
+        }
+        this.uri.absolutePath = drupalConfig.protocol + drupalConfig.host + fileUrl;
     }
     getAbsolutePath() {
         return this.uri.absolutePath;

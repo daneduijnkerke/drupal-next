@@ -1,4 +1,4 @@
-import { JsonApiResource } from "./JsonApi";
+import { JsonApiResource, JsonApiResponse } from "./JsonApi";
 import { DrupalEntity, DrupalEntityInterface } from "./DrupalEntity";
 export interface DrupalFileInterface extends DrupalEntityInterface {
     fid: string | null;
@@ -25,6 +25,6 @@ export declare class DrupalFile extends DrupalEntity implements DrupalFileInterf
     key_conversions: {
         drupal_internal__fid: string;
     };
-    constructor(resource: JsonApiResource);
+    constructor(resource: JsonApiResponse | JsonApiResource);
     getAbsolutePath(): string | null;
 }

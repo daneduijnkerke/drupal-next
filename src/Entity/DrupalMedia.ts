@@ -18,42 +18,20 @@ export class DrupalMedia extends DrupalEntity implements DrupalMediaInterface {
     path: Record<string, string> | null = null;
     files: DrupalFile[] = [];
 
-    key_conversions = {
+    override key_conversions = {
         'drupal_internal__mid': 'mid',
     };
 
-    constructor(resource: JsonApiResponse) {
-        super();
-        // Fill all resource properties.
-        Object.keys(resource).forEach(key => {
-            if (this.hasOwnProperty(key)) {
-                if (key === 'type') {
-                    this.bundle = resource[key].split('--')[1];
-                }
-                this[key] = resource[key];
-            }
-        });
-        // Fill all attributes.
-        Object.keys(resource.data['attributes']).forEach(key => {
-            let internalKey = key;
-            if (key === 'body') {
-                this.fields[key] = resource.data['attributes'][key];
-            }
-            if (key in this.key_conversions) {
-                internalKey = this.key_conversions[key];
-            }
-            if (this.hasOwnProperty(internalKey)) {
-                this[internalKey] = resource.data['attributes'][key];
-            }
-            if (key.startsWith('field_')) {
-                this.fields[key] = resource.data['attributes'][key];
-            }
-        });
+    constructor(resource: JsonApiResponse | JsonApiResource) {
+        super(resource);
+        this.fill(resource);
         // Fill all includes.
-        resource.included.forEach(include => {
-            const resource = include as JsonApiResource;
-            this.files.push(new DrupalFile(resource));
-        });
+        if ("included" in resource) {
+            resource.included.forEach(include => {
+                const resource = include as JsonApiResource;
+                this.files.push(new DrupalFile(resource));
+            });
+        }
     }
 
     getFile(): DrupalFile | null {

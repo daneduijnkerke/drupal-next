@@ -1,3 +1,4 @@
+import { JsonApiResource, JsonApiResponse } from "./JsonApi";
 export interface DrupalEntityInterface {
     id: string | null;
     type: string | null;
@@ -8,6 +9,8 @@ export interface DrupalEntityInterface {
     created: string | null;
     changed: string | null;
     fields: Record<string, any>;
+    key_conversions: {};
+    fill(resource: any): void;
 }
 export declare class DrupalEntity implements DrupalEntityInterface {
     id: string | null;
@@ -19,7 +22,10 @@ export declare class DrupalEntity implements DrupalEntityInterface {
     changed: string | null;
     created: string | null;
     fields: Record<string, any>;
+    key_conversions: {};
+    constructor(resource: JsonApiResponse | JsonApiResource);
     has(field: string): boolean;
     get(field: string): Promise<any>;
     handleReference(reference: any): Promise<DrupalEntity>;
+    fill(res: JsonApiResponse | JsonApiResource): void;
 }

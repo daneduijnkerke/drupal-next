@@ -1,4 +1,5 @@
 import {DrupalClient} from "../client";
+import {JsonApiResource, JsonApiResponse} from "./JsonApi";
 
 export interface DrupalEntityInterface {
     id: string | null;
@@ -10,6 +11,10 @@ export interface DrupalEntityInterface {
     created: string | null;
     changed: string | null;
     fields: Record<string, any>;
+
+    key_conversions: {};
+
+    fill(resource): void;
 }
 
 export class DrupalEntity implements DrupalEntityInterface {
@@ -22,6 +27,12 @@ export class DrupalEntity implements DrupalEntityInterface {
     changed: string | null = null;
     created: string | null = null;
     fields:Record<string, any> = {};
+
+    key_conversions: {} = {};
+
+    constructor(resource: JsonApiResponse | JsonApiResource) {
+        this.fill(resource);
+    }
 
     public has(field: string) {
         return this.fields.hasOwnProperty(field);
@@ -77,5 +88,45 @@ export class DrupalEntity implements DrupalEntityInterface {
         }
 
         return entity;
+    }
+
+    public fill(res: JsonApiResponse | JsonApiResource) {
+        let resource = res;
+        if ("data" in res && !Array.isArray(res.data)) {
+            resource = <JsonApiResource>res.data
+        }
+
+        Object.keys(resource).forEach(key => {
+            if (this.hasOwnProperty(key)) {
+                if (key === 'type') {
+                    this.bundle = resource[key].split('--')[1] ?? null;
+                }
+                this[key] = resource[key];
+            }
+        });
+        if (resource.hasOwnProperty('attributes')) {
+            Object.keys(resource['attributes']).forEach(key => {
+                let internalKey = key;
+                if (key === 'body') {
+                    this.fields[key] = resource['attributes'][key];
+                }
+                if (key in this.key_conversions) {
+                    internalKey = this.key_conversions[key];
+                }
+                if (this.hasOwnProperty(internalKey)) {
+                    this[internalKey] = resource['attributes'][key];
+                }
+                if (key.startsWith('field_')) {
+                    this.fields[key] = resource['attributes'][key];
+                }
+            });
+        }
+        if (resource.hasOwnProperty('relationships')) {
+            Object.keys(resource['relationships']).forEach(key => {
+                if (key.startsWith('field_')) {
+                    this.fields[key] = resource['relationships'][key];
+                }
+            });
+        }
     }
 }

@@ -3,7 +3,7 @@ export interface JsonApiResponse {
         version: string
         meta: Record<string, any>[]
     }
-    data: Record<string, any>
+    data: JsonApiResource | JsonApiResource[]
     errors: JsonApiError[]
     meta: {
         count: number

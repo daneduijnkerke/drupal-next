@@ -1,4 +1,4 @@
-import { JsonApiResponse } from "./JsonApi";
+import { JsonApiResource, JsonApiResponse } from "./JsonApi";
 import { DrupalEntity, DrupalEntityInterface } from "./DrupalEntity";
 import { DrupalFile } from "./DrupalFile";
 export interface DrupalMediaInterface extends DrupalEntityInterface {
@@ -17,7 +17,7 @@ export declare class DrupalMedia extends DrupalEntity implements DrupalMediaInte
     key_conversions: {
         drupal_internal__mid: string;
     };
-    constructor(resource: JsonApiResponse);
+    constructor(resource: JsonApiResponse | JsonApiResource);
     getFile(): DrupalFile | null;
     getFiles(): DrupalFile[];
 }
