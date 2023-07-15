@@ -28,9 +28,6 @@
     "isolatedModules": false,
     "jsx": "preserve",
     "baseUrl": "src",
-    "paths": {
-      "@/*": ["./*"],
-    },
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]

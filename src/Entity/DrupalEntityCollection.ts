@@ -1,8 +1,8 @@
-import {JsonApiResource, JsonApiResponse} from "./JsonApi";
+import {JsonApiResponse} from "./JsonApi";
 
 export interface DrupalEntityCollectionInterface {
     type: string | null;
-    data: JsonApiResource[];
+    data: [];
     key_conversions: {};
 
     fill(resource, type): void;
@@ -10,7 +10,7 @@ export interface DrupalEntityCollectionInterface {
 
 export class DrupalEntityCollection<T> implements DrupalEntityCollectionInterface {
     type: string | null = null;
-    data = [];
+    data: [] = [];
     key_conversions: {} = {};
 
     constructor(type: string, resource: JsonApiResponse, entityClass: (new(res) => T )) {

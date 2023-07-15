@@ -2,6 +2,7 @@ import { JsonApiResource, JsonApiResponse } from "./JsonApi";
 export interface DrupalEntityInterface {
     id: string | null;
     type: string | null;
+    entity: string | null;
     bundle: string | null;
     langcode: string | null;
     default_langcode: boolean | null;
@@ -15,6 +16,7 @@ export interface DrupalEntityInterface {
 export declare class DrupalEntity implements DrupalEntityInterface {
     id: string | null;
     type: string | null;
+    entity: string | null;
     bundle: string | null;
     langcode: string | null;
     default_langcode: boolean | null;

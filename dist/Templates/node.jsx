@@ -7,15 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-export default function paragraph({ entity }) {
+export default function node({ entity }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const paragraph = entity;
-        const title = (<h2>{yield paragraph.get('field_title')}</h2>);
-        const field_text = yield paragraph.get('field_text');
-        const content = (`<span>${field_text.processed}</span>`);
-        return (<div className="paragraph">
+        const node = entity;
+        const title = (<h1>{node.title}</h1>);
+        const body = yield node.get('body');
+        const content = (`<span>${body.processed}</span>`);
+        return (<div className="node">
             {title}
-            <div dangerouslySetInnerHTML={{ __html: content }} className="paragraph-inner"></div>
+            <div dangerouslySetInnerHTML={{ __html: content }} className="node-inner"></div>
         </div>);
     });
 }

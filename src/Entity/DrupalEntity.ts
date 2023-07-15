@@ -4,6 +4,7 @@ import {JsonApiResource, JsonApiResponse} from "./JsonApi";
 export interface DrupalEntityInterface {
     id: string | null;
     type: string | null;
+    entity: string | null;
     bundle: string | null;
     langcode: string | null;
     default_langcode: boolean | null;
@@ -20,6 +21,7 @@ export interface DrupalEntityInterface {
 export class DrupalEntity implements DrupalEntityInterface {
     id: string | null = null;
     type: string | null = null;
+    entity: string | null = null;
     bundle: string | null = null;
     langcode: string | null = null;
     default_langcode: boolean | null = null;
@@ -99,6 +101,7 @@ export class DrupalEntity implements DrupalEntityInterface {
         Object.keys(resource).forEach(key => {
             if (this.hasOwnProperty(key)) {
                 if (key === 'type') {
+                    this.entity = resource[key].split('--')[0] ?? null;
                     this.bundle = resource[key].split('--')[1] ?? null;
                 }
                 this[key] = resource[key];

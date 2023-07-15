@@ -22,8 +22,4 @@ export declare class DrupalClient {
     getMenu(id: string): Promise<DrupalEntityCollection<DrupalMenuItem>>;
     getMenuItem(id: string): Promise<DrupalMenuItem>;
     resolveNode(path: string): Promise<DrupalNode>;
-    static readJsonFile(path: any): any;
-    static getConfigFile(dir?: string): any;
-    static getConfig(): any;
-    static getTemplatesDir(): string;
 }

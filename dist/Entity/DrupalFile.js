@@ -1,5 +1,5 @@
 import { DrupalEntity } from "./DrupalEntity";
-import { DrupalClient } from "../client";
+import { DrupalUtils } from "../Utils";
 export class DrupalFile extends DrupalEntity {
     constructor(resource) {
         super(resource);
@@ -22,7 +22,7 @@ export class DrupalFile extends DrupalEntity {
         };
         this.fill(resource);
         // Add absolute url to file.
-        const drupalConfig = DrupalClient.getConfig();
+        const drupalConfig = DrupalUtils.getConfig();
         let fileUrl = '';
         if ("data" in resource) {
             const res = resource.data;

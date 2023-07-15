@@ -3,9 +3,9 @@ import {DrupalNode} from "./Entity/DrupalNode";
 import {DrupalMedia} from "./Entity/DrupalMedia";
 import {DrupalParagraph} from "./Entity/DrupalParagraph";
 import {notFound} from "next/navigation";
-import fs from "fs";
 import {DrupalMenuItem} from "./Entity/DrupalMenuItem";
 import {DrupalEntityCollection} from "./Entity/DrupalEntityCollection";
+import {DrupalUtils} from "./Utils";
 
 export class DrupalClient {
     public protocol: string
@@ -17,9 +17,7 @@ export class DrupalClient {
     public templatesAlias: string
 
     constructor() {
-        // const conf = DrupalClient.getConfig();
-        const drupalConfig = DrupalClient.getConfig();
-        // const drupalConfig = DrupalClient.readJsonFile(conf)
+        const drupalConfig = DrupalUtils.getConfig();
 
         this.protocol = drupalConfig.protocol
         this.host = drupalConfig.host
@@ -70,7 +68,6 @@ export class DrupalClient {
     async getMedia(type: string, id: string): Promise<DrupalMedia> {
         const options = {
             'include': 'field_media_image',
-            // 'fields[file--file]': 'uri,url,filename,filemime,filesize,status,id,drupal_internal__fid'
         };
         const response = await this.getResource('media/' + type, id, options);
         return new DrupalMedia(response);
@@ -98,36 +95,5 @@ export class DrupalClient {
         const node = this.getNode(jsonResponse.entity.bundle, jsonResponse.entity.uuid);
 
         return node;
-    }
-    static readJsonFile(path) {
-        const file = require('fs').readFileSync(path, "utf8");
-        return JSON.parse(file);
-    }
-    static getConfigFile(dir = __dirname) {
-        const FILE_NAME = 'drupal_next.config.json';
-
-        const fsp = require('fs'),
-            path = require('path');
-
-        let ls = fsp.readdirSync(dir);
-        if(ls.includes(FILE_NAME))
-            return path.join(dir,FILE_NAME);
-        else if(dir == '/')
-            throw new Error(`Could not find ${FILE_NAME}`);
-        else
-            return this.getConfigFile(path.resolve(dir,'..'));
-    }
-
-    static getConfig() {
-        const file = this.getConfigFile();
-        return this.readJsonFile(file);
-    }
-
-    static getTemplatesDir() {
-        const configFile = this.getConfigFile();
-        const projectRoot = configFile.replace('/drupal_next.config.json', '');
-        const src = fs.existsSync(projectRoot + '/DrupalTemplates') ? '' : '/src';
-
-        return projectRoot + src + '/DrupalTemplates';
     }
 }

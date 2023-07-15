@@ -12,6 +12,7 @@ export class DrupalEntity {
     constructor(resource) {
         this.id = null;
         this.type = null;
+        this.entity = null;
         this.bundle = null;
         this.langcode = null;
         this.default_langcode = null;
@@ -79,10 +80,11 @@ export class DrupalEntity {
             resource = res.data;
         }
         Object.keys(resource).forEach(key => {
-            var _a;
+            var _a, _b;
             if (this.hasOwnProperty(key)) {
                 if (key === 'type') {
-                    this.bundle = (_a = resource[key].split('--')[1]) !== null && _a !== void 0 ? _a : null;
+                    this.entity = (_a = resource[key].split('--')[0]) !== null && _a !== void 0 ? _a : null;
+                    this.bundle = (_b = resource[key].split('--')[1]) !== null && _b !== void 0 ? _b : null;
                 }
                 this[key] = resource[key];
             }

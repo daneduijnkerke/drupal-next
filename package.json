@@ -1,7 +1,7 @@
 {
   "name": "drupal-next",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Next.js library for Drupal's JSON:API.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
@@ -9,14 +9,15 @@
     "dist",
     "LICENSE",
     "README.md",
-    "package.json"
+    "package.json",
+    "tsconfig.json"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["drupal", "nextjs", "next", "js", "json", "api", "JSON:API", "headless"],
+  "author": "Dane Duijnkerke",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.4.1",

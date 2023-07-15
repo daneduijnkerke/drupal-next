@@ -1,6 +1,6 @@
 import {JsonApiResource, JsonApiResponse} from "./JsonApi";
 import {DrupalEntity, DrupalEntityInterface} from "./DrupalEntity";
-import {DrupalClient} from "../client";
+import {DrupalUtils} from "../Utils";
 
 export interface DrupalFileInterface extends DrupalEntityInterface {
     fid: string | null;
@@ -42,7 +42,7 @@ export class DrupalFile extends DrupalEntity implements DrupalFileInterface {
 
 
         // Add absolute url to file.
-        const drupalConfig = DrupalClient.getConfig();
+        const drupalConfig = DrupalUtils.getConfig();
         let fileUrl = '';
         if ("data" in resource) {
             const res = <JsonApiResource>resource.data;
