@@ -26,6 +26,12 @@ export class DrupalViewSorting {
         this.exposed = sort.exposed;
         this.expose = sort.expose;
     }
+    buildQuery() {
+        let sortOption = {};
+        sortOption[`sort[${this.id}][path]`] = this.field;
+        sortOption[`sort[${this.id}][direction]`] = this.order;
+        return sortOption;
+    }
 }
 export class DrupalViewPager {
     constructor(pager) {
@@ -47,7 +53,7 @@ export class DrupalView extends DrupalEntity {
         this.label = null;
         this.sub_entity = null;
         this.filters = {};
-        this.sorts = null;
+        this.sorts = {};
         this.pager = null;
         this.view_mode = null;
         this.filter_class_map = {
@@ -75,9 +81,9 @@ export class DrupalView extends DrupalEntity {
         return filterArray;
     }
     getSortings(sortings) {
-        let sortingArray = [];
-        Object.keys(sortings).forEach(key => {
-            sortingArray.push(new DrupalViewSorting(sortings[key]));
+        let sortingArray = {};
+        Object.values(sortings).forEach(sorting => {
+            sortingArray[sorting.id] = new DrupalViewSorting(sorting);
         });
         return sortingArray;
     }
@@ -121,19 +127,27 @@ export class DrupalView extends DrupalEntity {
         });
         return filterOptions;
     }
+    getSortOptions() {
+        const sorts = this.sorts;
+        let sortOptions = {};
+        Object.values(sorts).forEach((sort) => {
+            Object.assign(sortOptions, sort.buildQuery());
+        });
+        return sortOptions;
+    }
     getResource() {
         var _a;
         if (this.filters.hasOwnProperty('type')) {
-            let bundle = (_a = Object.values(this.filters['type']['value'])[0]) !== null && _a !== void 0 ? _a : this.sub_entity;
+            const bundle = (_a = Object.values(this.filters['type']['value'])[0]) !== null && _a !== void 0 ? _a : this.sub_entity;
             return `${this.sub_entity}/${bundle}`;
         }
-        return '';
+        return `${this.sub_entity}/${this.sub_entity}`;
     }
     getResults(page = 0) {
         return __awaiter(this, void 0, void 0, function* () {
             page = page + 1;
             const client = new DrupalClient();
-            const response = yield client.getResource(this.getResource(), '', this.getFilterOptions());
+            const response = yield client.getResource(this.getResource(), '', Object.assign(Object.assign({}, this.getFilterOptions()), this.getSortOptions()));
             return new DrupalEntityCollection('node', response, DrupalNode);
         });
     }

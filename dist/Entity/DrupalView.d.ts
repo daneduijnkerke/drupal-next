@@ -25,6 +25,7 @@ export declare class DrupalViewSorting {
     expose: {};
     order: boolean;
     constructor(sort: any);
+    buildQuery(): {};
 }
 export declare class DrupalViewPager {
     type: string;
@@ -51,7 +52,7 @@ export declare class DrupalView extends DrupalEntity implements DrupalViewInterf
     label: string | null;
     sub_entity: string | null;
     filters: Record<string, DrupalViewFilter>;
-    sorts: any;
+    sorts: Record<string, DrupalViewSorting>;
     pager: any;
     view_mode: string | null;
     filter_class_map: {
@@ -71,6 +72,7 @@ export declare class DrupalView extends DrupalEntity implements DrupalViewInterf
     private getPager;
     private fillViewData;
     getFilterOptions(): {};
+    getSortOptions(): {};
     private getResource;
     getResults(page?: number): Promise<DrupalEntityCollection<DrupalNode>>;
 }

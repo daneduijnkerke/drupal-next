@@ -57,6 +57,7 @@ export class DrupalEntity {
             const bundle = reference.type.split('--')[1];
             const id = reference.id;
             let entity;
+            // #TODO: Dynamically get correct entity somehow?
             switch (resource) {
                 case 'media': {
                     entity = yield client.getMedia(bundle, id);

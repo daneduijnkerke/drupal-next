@@ -53,9 +53,8 @@ export class DrupalClient {
 
     async getNodes(bundle: string, sort: string = 'created', direction: string = 'ASC'): Promise<DrupalEntityCollection<DrupalNode>> {
         const options = {
-            'sort': sort,
-            'sort[sort-changed][path]': sort,
-            'sort[sort-changed][direction]': direction
+            'sort[sort-field][path]': sort,
+            'sort[sort-field][direction]': direction
         };
         const response = await this.getResource('node/' + bundle, '', options);
         return new DrupalEntityCollection('node', response, DrupalNode);

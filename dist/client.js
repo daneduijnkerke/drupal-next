@@ -34,6 +34,10 @@ export class DrupalClient {
             if (id.length > 0) {
                 id = '/' + id;
             }
+            console.log("AAAAAAAAAAAAAAA");
+            console.log(options);
+            console.log(DrupalUtils.buildQueryOptions(options));
+            console.log("BBBBBBBBBBBBBBBBBBBBBBB");
             const response = yield fetch(this.basePath + resource + id + DrupalUtils.buildQueryOptions(options));
             if (response.status === 404)
                 throw new Error('Resource ' + resource + 'not found.');
@@ -53,9 +57,8 @@ export class DrupalClient {
     getNodes(bundle, sort = 'created', direction = 'ASC') {
         return __awaiter(this, void 0, void 0, function* () {
             const options = {
-                'sort': sort,
-                'sort[sort-changed][path]': sort,
-                'sort[sort-changed][direction]': direction
+                'sort[sort-field][path]': sort,
+                'sort[sort-field][direction]': direction
             };
             const response = yield this.getResource('node/' + bundle, '', options);
             return new DrupalEntityCollection('node', response, DrupalNode);

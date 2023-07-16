@@ -34,6 +34,15 @@ export class DrupalViewSorting {
         this.exposed = sort.exposed;
         this.expose = sort.expose;
     }
+
+    public buildQuery() {
+        let sortOption = {};
+
+        sortOption[`sort[${this.id}][path]`] = this.field;
+        sortOption[`sort[${this.id}][direction]`] = this.order;
+
+        return sortOption;
+    }
 }
 
 export class DrupalViewPager {
@@ -75,7 +84,7 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
     label: string | null = null;
     sub_entity: string | null = null;
     filters: Record<string, DrupalViewFilter> = {};
-    sorts: any = null;
+    sorts: Record<string, DrupalViewSorting> = {};
     pager: any = null;
     view_mode: string | null = null;
 
@@ -108,10 +117,10 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
 
         return filterArray;
     }
-    private getSortings(sortings): DrupalViewSorting[] {
-        let sortingArray: DrupalViewSorting[] = [];
-        Object.keys(sortings).forEach(key => {
-            sortingArray.push(new DrupalViewSorting(sortings[key]));
+    private getSortings(sortings): Record<string, DrupalViewSorting> {
+        let sortingArray: Record<string, DrupalViewSorting> = {};
+        Object.values<DrupalViewSorting>(sortings).forEach(sorting => {
+            sortingArray[sorting.id] = new DrupalViewSorting(sorting);
         });
 
         return sortingArray;
@@ -163,18 +172,29 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
         return filterOptions;
     }
 
+    public getSortOptions() {
+        const sorts = this.sorts;
+        let sortOptions = {};
+
+        Object.values(sorts).forEach((sort) => {
+            Object.assign(sortOptions, sort.buildQuery());
+        });
+
+        return sortOptions;
+    }
+
     private getResource() {
         if (this.filters.hasOwnProperty('type')) {
-            let bundle = Object.values(this.filters['type']['value'])[0] ?? this.sub_entity;
+            const bundle = Object.values(this.filters['type']['value'])[0] ?? this.sub_entity;
             return `${this.sub_entity}/${bundle}`
         }
-        return '';
+        return `${this.sub_entity}/${this.sub_entity}`;
     }
 
     public async getResults(page: number = 0) {
         page = page + 1;
         const client = new DrupalClient();
-        const response = await client.getResource(this.getResource(), '', this.getFilterOptions());
+        const response = await client.getResource(this.getResource(), '', {...this.getFilterOptions(), ...this.getSortOptions()});
         return new DrupalEntityCollection('node', response, DrupalNode);
     }
 }
