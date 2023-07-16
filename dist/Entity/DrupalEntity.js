@@ -75,6 +75,7 @@ export class DrupalEntity {
         });
     }
     fill(res) {
+        // Convert Respones to a Resource.
         let resource = res;
         if ("data" in res && !Array.isArray(res.data)) {
             resource = res.data;

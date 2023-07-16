@@ -6,3 +6,4 @@ export * from "./DrupalParagraph";
 export * from "./DrupalLink";
 export * from "./DrupalMenuItem";
 export * from "./DrupalEntityCollection";
+export * from "./DrupalView";

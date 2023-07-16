@@ -33,6 +33,17 @@ export class DrupalUtils {
         return projectRoot + src + '/DrupalTemplates';
     }
 
+    static buildQueryOptions(options) {
+        let params = '';
+        if (Object.values(options).length > 0) {
+            params = '?';
+            Object.keys(options).forEach((key) => {
+                params = params + key + '=' + options[key] + '&';
+            });
+            params = params.slice(0, -1);
+        }
+        return params;
+    }
     static getTemplate(entity) {
         const templateEntity = entity.constructor.name;
         const baseTemplate = entity.entity;

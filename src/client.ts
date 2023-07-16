@@ -6,6 +6,7 @@ import {notFound} from "next/navigation";
 import {DrupalMenuItem} from "./Entity/DrupalMenuItem";
 import {DrupalEntityCollection} from "./Entity/DrupalEntityCollection";
 import {DrupalUtils} from "./Utils";
+import {DrupalView} from "./Entity/DrupalView";
 
 export class DrupalClient {
     public protocol: string
@@ -32,21 +33,11 @@ export class DrupalClient {
      * Get a Drupal resource with JSON:API.
      */
     async getResource(resource: string, id: string = '', options: {[option: string]: string} = {}): Promise<JsonApiResponse> {
-        let params = '';
-
         if (id.length > 0) {
             id = '/' + id;
         }
 
-        if (Object.values(options).length > 0) {
-            params = '?';
-            Object.keys(options).forEach((key) => {
-                params = params + key + '=' + options[key] + '&';
-            });
-            params = params.slice(0, -1);
-        }
-
-        const response = await fetch(this.basePath + resource + id + params);
+        const response = await fetch(this.basePath + resource + id + DrupalUtils.buildQueryOptions(options));
 
         if (response.status === 404) throw new Error('Resource ' + resource + 'not found.');
         if (response.status === 403) throw new Error('Access denied for ' + resource + '.');
@@ -58,6 +49,21 @@ export class DrupalClient {
     async getNode(type: string, id: string): Promise<DrupalNode> {
         const response = await this.getResource('node/' + type, id);
         return new DrupalNode(response);
+    }
+
+    async getNodes(bundle: string, sort: string = 'created', direction: string = 'ASC'): Promise<DrupalEntityCollection<DrupalNode>> {
+        const options = {
+            'sort': sort,
+            'sort[sort-changed][path]': sort,
+            'sort[sort-changed][direction]': direction
+        };
+        const response = await this.getResource('node/' + bundle, '', options);
+        return new DrupalEntityCollection('node', response, DrupalNode);
+    }
+
+    async getView(id: string): Promise<DrupalView> {
+        const response = await this.getResource('view/view', id);
+        return new DrupalView(response);
     }
 
     async getParagraph(type: string, id: string): Promise<DrupalParagraph> {
@@ -78,11 +84,11 @@ export class DrupalClient {
             'filter[menu_name][value]': id,
             'sort': 'weight'
         };
-        const response = await this.getResource('menu_items', '', options);
+        const response = await this.getResource('menu_link_content/menu_link_content', '', options);
         return new DrupalEntityCollection('menu_items', response, DrupalMenuItem);
     }
     async getMenuItem(id: string): Promise<DrupalMenuItem> {
-        const response = await this.getResource('menu_items', id);
+        const response = await this.getResource('menu_link_content/menu_link_content', id);
         return new DrupalMenuItem(response);
     }
 

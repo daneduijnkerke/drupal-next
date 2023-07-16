@@ -14,6 +14,7 @@ import { notFound } from "next/navigation";
 import { DrupalMenuItem } from "./Entity/DrupalMenuItem";
 import { DrupalEntityCollection } from "./Entity/DrupalEntityCollection";
 import { DrupalUtils } from "./Utils";
+import { DrupalView } from "./Entity/DrupalView";
 export class DrupalClient {
     constructor() {
         const drupalConfig = DrupalUtils.getConfig();
@@ -30,18 +31,10 @@ export class DrupalClient {
      */
     getResource(resource, id = '', options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            let params = '';
             if (id.length > 0) {
                 id = '/' + id;
             }
-            if (Object.values(options).length > 0) {
-                params = '?';
-                Object.keys(options).forEach((key) => {
-                    params = params + key + '=' + options[key] + '&';
-                });
-                params = params.slice(0, -1);
-            }
-            const response = yield fetch(this.basePath + resource + id + params);
+            const response = yield fetch(this.basePath + resource + id + DrupalUtils.buildQueryOptions(options));
             if (response.status === 404)
                 throw new Error('Resource ' + resource + 'not found.');
             if (response.status === 403)
@@ -55,6 +48,23 @@ export class DrupalClient {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.getResource('node/' + type, id);
             return new DrupalNode(response);
+        });
+    }
+    getNodes(bundle, sort = 'created', direction = 'ASC') {
+        return __awaiter(this, void 0, void 0, function* () {
+            const options = {
+                'sort': sort,
+                'sort[sort-changed][path]': sort,
+                'sort[sort-changed][direction]': direction
+            };
+            const response = yield this.getResource('node/' + bundle, '', options);
+            return new DrupalEntityCollection('node', response, DrupalNode);
+        });
+    }
+    getView(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.getResource('view/view', id);
+            return new DrupalView(response);
         });
     }
     getParagraph(type, id) {
@@ -78,13 +88,13 @@ export class DrupalClient {
                 'filter[menu_name][value]': id,
                 'sort': 'weight'
             };
-            const response = yield this.getResource('menu_items', '', options);
+            const response = yield this.getResource('menu_link_content/menu_link_content', '', options);
             return new DrupalEntityCollection('menu_items', response, DrupalMenuItem);
         });
     }
     getMenuItem(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.getResource('menu_items', id);
+            const response = yield this.getResource('menu_link_content/menu_link_content', id);
             return new DrupalMenuItem(response);
         });
     }

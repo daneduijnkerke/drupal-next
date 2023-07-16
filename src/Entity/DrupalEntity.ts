@@ -93,6 +93,7 @@ export class DrupalEntity implements DrupalEntityInterface {
     }
 
     public fill(res: JsonApiResponse | JsonApiResource) {
+        // Convert Respones to a Resource.
         let resource = res;
         if ("data" in res && !Array.isArray(res.data)) {
             resource = <JsonApiResource>res.data
