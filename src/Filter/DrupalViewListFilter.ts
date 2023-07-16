@@ -17,7 +17,6 @@ export class DrupalViewListFilter extends DrupalViewFilter implements DrupalView
     public override buildQuery() {
         let filterOption = [];
 
-
         if (Array.isArray(this.value)) {
             const conjunction = this.operator.toUpperCase();
 

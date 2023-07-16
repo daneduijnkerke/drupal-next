@@ -12,10 +12,12 @@ export class DrupalViewBundleFilter extends DrupalViewFilter {
         };
     }
     buildQuery() {
-        let filterOption = [];
-        filterOption[`filter[${this.id}][condition][value]`] = this.value;
-        filterOption[`filter[${this.id}][condition][path]`] = this.field;
-        filterOption[`filter[${this.id}][condition][operator]`] = 'IN';
+        let filterOption = {};
+        // #TODO: Might want to change this to combine multiple bundle queries or use jsonapi_cross_bundles.
+        // NOT SUPPORTED FOR NOW. jsonapi_cross_bundles should be more stable and compatible with jsonapi_extras.
+        // filterOption[`filter[${this.id}][condition][value]`] = this.value;
+        // filterOption[`filter[${this.id}][condition][path]`] = this.field;
+        // filterOption[`filter[${this.id}][condition][operator]`] = 'IN';
         return filterOption;
     }
 }

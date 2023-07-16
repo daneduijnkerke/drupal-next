@@ -36,6 +36,10 @@
       "import": "./dist/Components/*.jsx",
       "require": "./dist/Components/*.d.ts"
     },
+    "./Utils/*": {
+      "import": "./dist/Utils/*.jsx",
+      "require": "./dist/Utils/*.d.ts"
+    },
     "./client": {
       "import": "./dist/client.js",
       "require": "./dist/client.d.ts"

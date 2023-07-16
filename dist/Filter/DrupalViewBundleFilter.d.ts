@@ -3,5 +3,5 @@ export declare class DrupalViewBundleFilter extends DrupalViewFilter implements 
     value: string;
     readonly allowed_operators: any;
     constructor(filter: any);
-    buildQuery(): never[];
+    buildQuery(): {};
 }

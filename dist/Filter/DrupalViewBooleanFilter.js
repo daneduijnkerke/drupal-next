@@ -10,7 +10,7 @@ export class DrupalViewBooleanFilter extends DrupalViewFilter {
         };
     }
     buildQuery() {
-        let filterOption = [];
+        let filterOption = {};
         filterOption[`filter[${this.id}][condition][value]`] = this.value;
         filterOption[`filter[${this.id}][condition][path]`] = this.field;
         filterOption[`filter[${this.id}][condition][operator]`] = 'IN';

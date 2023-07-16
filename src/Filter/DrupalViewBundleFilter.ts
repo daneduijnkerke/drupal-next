@@ -17,11 +17,13 @@ export class DrupalViewBundleFilter extends DrupalViewFilter implements DrupalVi
     }
 
     public override buildQuery() {
-        let filterOption = [];
+        let filterOption = {};
 
-        filterOption[`filter[${this.id}][condition][value]`] = this.value;
-        filterOption[`filter[${this.id}][condition][path]`] = this.field;
-        filterOption[`filter[${this.id}][condition][operator]`] = 'IN';
+        // #TODO: Might want to change this to combine multiple bundle queries or use jsonapi_cross_bundles.
+        // NOT SUPPORTED FOR NOW. jsonapi_cross_bundles should be more stable and compatible with jsonapi_extras.
+        // filterOption[`filter[${this.id}][condition][value]`] = this.value;
+        // filterOption[`filter[${this.id}][condition][path]`] = this.field;
+        // filterOption[`filter[${this.id}][condition][operator]`] = 'IN';
 
         return filterOption;
     }

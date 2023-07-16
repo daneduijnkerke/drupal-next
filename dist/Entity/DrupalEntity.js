@@ -66,6 +66,10 @@ export class DrupalEntity {
                     entity = yield client.getParagraph(bundle, id);
                     break;
                 }
+                case 'view': {
+                    entity = yield client.getView(id);
+                    break;
+                }
                 default: {
                     entity = yield client.getResource(resource + '/' + bundle, id);
                     break;

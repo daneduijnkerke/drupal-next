@@ -15,7 +15,7 @@ export class DrupalViewBooleanFilter extends DrupalViewFilter implements DrupalV
     }
 
     public override buildQuery() {
-        let filterOption = [];
+        let filterOption = {};
 
         filterOption[`filter[${this.id}][condition][value]`] = this.value;
         filterOption[`filter[${this.id}][condition][path]`] = this.field;

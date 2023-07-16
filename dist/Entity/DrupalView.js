@@ -1,10 +1,22 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { DrupalEntity } from "./DrupalEntity";
-import { DrupalUtils } from "../Utils";
 import { DrupalViewFilter } from "../Filter/DrupalViewFilter";
 import { DrupalViewStringFilter } from "../Filter/DrupalViewStringFilter";
 import { DrupalViewListFilter } from "../Filter/DrupalViewListFilter";
 import { DrupalViewBooleanFilter } from "../Filter/DrupalViewBooleanFilter";
 import { DrupalViewNumericFilter } from "../Filter/DrupalViewNumericFilter";
+import { DrupalViewBundleFilter } from "../Filter/DrupalViewBundleFilter";
+import { DrupalEntityCollection } from "./DrupalEntityCollection";
+import { DrupalNode } from "./DrupalNode";
+import { DrupalClient } from "../client";
 export class DrupalViewSorting {
     constructor(sort) {
         this.id = sort.id;
@@ -44,7 +56,7 @@ export class DrupalView extends DrupalEntity {
             'numeric': DrupalViewNumericFilter,
             'boolean': DrupalViewBooleanFilter,
             'list_field': DrupalViewListFilter,
-            'bundle': DrupalViewListFilter,
+            'bundle': DrupalViewBundleFilter,
         };
         this.key_conversions = {
             'drupal_internal__id': 'vid',
@@ -101,34 +113,28 @@ export class DrupalView extends DrupalEntity {
             }
         });
     }
-    buildQuery() {
-        // const entity = this.sub_entity;
+    getFilterOptions() {
         const filters = this.filters;
-        // const sorts = this.sorts;
         let filterOptions = {};
-        Object.values(filters).forEach((filter, findex) => {
-            const test = filter.buildQuery();
-            console.log(findex);
-            console.log(test);
-            // filterOptions[filter.field] = test;
-            // filterOptions = {...test}
-            Object.assign(filterOptions, test);
+        Object.values(filters).forEach((filter) => {
+            Object.assign(filterOptions, filter.buildQuery());
         });
-        console.log(filterOptions);
-        console.log(DrupalUtils.buildQueryOptions(filterOptions));
-        console.log("AAAAAAAAAAAAA");
-        // When there is a bundle filter, we need multiple queries to fetch all nodes of these bundles since JSON:API only has 1 link per bundle.
-        if (filters.hasOwnProperty('type')) {
+        return filterOptions;
+    }
+    getResource() {
+        var _a;
+        if (this.filters.hasOwnProperty('type')) {
+            let bundle = (_a = Object.values(this.filters['type']['value'])[0]) !== null && _a !== void 0 ? _a : this.sub_entity;
+            return `${this.sub_entity}/${bundle}`;
         }
-        // let queries = [];
-        // filters.forEach(filter => {
-        //     if (filter.field === 'type') {
-        //         filter.value.forEach(bundle => {
-        //             queries.push(entity + '/' + bundle);
-        //         })
-        //     }
-        // });
-        //
-        // console.log(queries);
+        return '';
+    }
+    getResults(page = 0) {
+        return __awaiter(this, void 0, void 0, function* () {
+            page = page + 1;
+            const client = new DrupalClient();
+            const response = yield client.getResource(this.getResource(), '', this.getFilterOptions());
+            return new DrupalEntityCollection('node', response, DrupalNode);
+        });
     }
 }

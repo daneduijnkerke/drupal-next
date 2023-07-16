@@ -26,6 +26,9 @@ export class DrupalUtils {
         const src = fs.existsSync(projectRoot + '/DrupalTemplates') ? '/app' : '/src/app';
         return projectRoot + src + '/DrupalTemplates';
     }
+    static ucfirst(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
     static buildQueryOptions(options) {
         let params = '';
         if (Object.values(options).length > 0) {
@@ -37,11 +40,20 @@ export class DrupalUtils {
         }
         return params;
     }
-    static getTemplate(entity) {
+    static getTemplate(entity, viewmode = '') {
         const templateEntity = entity.constructor.name;
         const baseTemplate = entity.entity;
         const bundle = entity.bundle;
         const templatesDir = DrupalUtils.getTemplatesDir() + '/' + templateEntity + '/';
+        // Check with viewmode.
+        if (viewmode && bundle && fs.existsSync(templatesDir + baseTemplate + '_' + bundle + '_' + viewmode + '.tsx')) {
+            const Content = dynamic(() => import('app/DrupalTemplates/' + templateEntity + '/' + baseTemplate + '_' + bundle + '_' + viewmode), {
+                ssr: true,
+                loading: () => <p>Loading...</p>,
+            });
+            return <Content entity={entity}/>;
+        }
+        // Check without viewmode.
         if (bundle && fs.existsSync(templatesDir + baseTemplate + '_' + bundle + '.tsx')) {
             const Content = dynamic(() => import('app/DrupalTemplates/' + templateEntity + '/' + baseTemplate + '_' + bundle), {
                 ssr: true,
@@ -49,6 +61,7 @@ export class DrupalUtils {
             });
             return <Content entity={entity}/>;
         }
+        // Default node template.
         const Content = dynamic(() => import('../Templates/' + baseTemplate), {
             ssr: true,
             loading: () => <p>Loading...</p>,

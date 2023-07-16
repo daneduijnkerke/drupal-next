@@ -3,5 +3,5 @@ export declare class DrupalViewBooleanFilter extends DrupalViewFilter implements
     value: boolean;
     readonly allowed_operators: any;
     constructor(filter: any);
-    buildQuery(): never[];
+    buildQuery(): {};
 }

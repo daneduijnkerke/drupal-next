@@ -1,11 +1,14 @@
 import {JsonApiResource, JsonApiResponse} from "./JsonApi";
 import {DrupalEntity, DrupalEntityInterface} from "./DrupalEntity";
-import {DrupalUtils} from "../Utils";
 import {DrupalViewFilter} from "../Filter/DrupalViewFilter";
 import {DrupalViewStringFilter} from "../Filter/DrupalViewStringFilter";
 import {DrupalViewListFilter} from "../Filter/DrupalViewListFilter";
 import {DrupalViewBooleanFilter} from "../Filter/DrupalViewBooleanFilter";
 import {DrupalViewNumericFilter} from "../Filter/DrupalViewNumericFilter";
+import {DrupalViewBundleFilter} from "../Filter/DrupalViewBundleFilter";
+import {DrupalEntityCollection} from "./DrupalEntityCollection";
+import {DrupalNode} from "./DrupalNode";
+import {DrupalClient} from "../client";
 
 export interface DrupalViewInterface extends DrupalEntityInterface {
     vid: string | null;
@@ -82,7 +85,7 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
         'numeric': DrupalViewNumericFilter,
         'boolean': DrupalViewBooleanFilter,
         'list_field': DrupalViewListFilter,
-        'bundle': DrupalViewListFilter,
+        'bundle': DrupalViewBundleFilter,
     };
 
     override key_conversions = {
@@ -95,7 +98,7 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
         this.fillViewData(resource);
     }
 
-    private getFilters(filters): Record<string, any> {
+    private getFilters(filters): Record<string, DrupalViewFilter> {
         let filterArray: Record<string, DrupalViewFilter> = {};
         Object.values<DrupalViewFilter>(filters).forEach((filter) => {
             const FilterClass = this.filter_class_map[filter['plugin_id']];
@@ -149,39 +152,29 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
         });
     }
 
-    public buildQuery() {
-        // const entity = this.sub_entity;
+    public getFilterOptions() {
         const filters = this.filters;
-        // const sorts = this.sorts;
         let filterOptions = {};
 
-        Object.values(filters).forEach((filter, findex) => {
-            const test = filter.buildQuery();
-            console.log(findex);
-            console.log(test);
-            // filterOptions[filter.field] = test;
-            // filterOptions = {...test}
-            Object.assign(filterOptions, test);
+        Object.values(filters).forEach((filter) => {
+            Object.assign(filterOptions, filter.buildQuery());
         });
 
-        console.log(filterOptions);
-        console.log(DrupalUtils.buildQueryOptions(filterOptions));
-        console.log("AAAAAAAAAAAAA");
+        return filterOptions;
+    }
 
-        // When there is a bundle filter, we need multiple queries to fetch all nodes of these bundles since JSON:API only has 1 link per bundle.
-        if (filters.hasOwnProperty('type')) {
-
+    private getResource() {
+        if (this.filters.hasOwnProperty('type')) {
+            let bundle = Object.values(this.filters['type']['value'])[0] ?? this.sub_entity;
+            return `${this.sub_entity}/${bundle}`
         }
-        // let queries = [];
+        return '';
+    }
 
-        // filters.forEach(filter => {
-        //     if (filter.field === 'type') {
-        //         filter.value.forEach(bundle => {
-        //             queries.push(entity + '/' + bundle);
-        //         })
-        //     }
-        // });
-        //
-        // console.log(queries);
+    public async getResults(page: number = 0) {
+        page = page + 1;
+        const client = new DrupalClient();
+        const response = await client.getResource(this.getResource(), '', this.getFilterOptions());
+        return new DrupalEntityCollection('node', response, DrupalNode);
     }
 }

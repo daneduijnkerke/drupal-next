@@ -74,6 +74,7 @@ export class DrupalEntity implements DrupalEntityInterface {
         const id = reference.id;
 
         let entity;
+        // #TODO: Dynamically get correct entity somehow?
         switch(resource) {
             case 'media': {
                 entity = await client.getMedia(bundle, id);
@@ -81,6 +82,10 @@ export class DrupalEntity implements DrupalEntityInterface {
             }
             case 'paragraph': {
                 entity = await client.getParagraph(bundle, id);
+                break;
+            }
+            case 'view': {
+                entity = await client.getView(id);
                 break;
             }
             default: {

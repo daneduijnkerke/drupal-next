@@ -70,11 +70,16 @@ export class DrupalViewFilter implements DrupalViewFilterInterface {
 
     public buildQuery() {
         if (this.id === 'type') { return; }
+
         let filterOption = {};
 
-        // list_field filter
-
         filterOption[`filter[${this.id}][operator]`] = this.operator.toUpperCase();
+
+        if (this.operator === 'empty' ||
+            this.operator === 'not empty') {
+            return filterOption;
+        }
+
         filterOption[`filter[${this.id}][value]`] = this.value;
 
         return filterOption;

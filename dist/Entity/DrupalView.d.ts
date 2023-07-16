@@ -5,6 +5,9 @@ import { DrupalViewStringFilter } from "../Filter/DrupalViewStringFilter";
 import { DrupalViewListFilter } from "../Filter/DrupalViewListFilter";
 import { DrupalViewBooleanFilter } from "../Filter/DrupalViewBooleanFilter";
 import { DrupalViewNumericFilter } from "../Filter/DrupalViewNumericFilter";
+import { DrupalViewBundleFilter } from "../Filter/DrupalViewBundleFilter";
+import { DrupalEntityCollection } from "./DrupalEntityCollection";
+import { DrupalNode } from "./DrupalNode";
 export interface DrupalViewInterface extends DrupalEntityInterface {
     vid: string | null;
     label: string | null;
@@ -57,7 +60,7 @@ export declare class DrupalView extends DrupalEntity implements DrupalViewInterf
         numeric: typeof DrupalViewNumericFilter;
         boolean: typeof DrupalViewBooleanFilter;
         list_field: typeof DrupalViewListFilter;
-        bundle: typeof DrupalViewListFilter;
+        bundle: typeof DrupalViewBundleFilter;
     };
     key_conversions: {
         drupal_internal__id: string;
@@ -67,5 +70,7 @@ export declare class DrupalView extends DrupalEntity implements DrupalViewInterf
     private getSortings;
     private getPager;
     private fillViewData;
-    buildQuery(): void;
+    getFilterOptions(): {};
+    private getResource;
+    getResults(page?: number): Promise<DrupalEntityCollection<DrupalNode>>;
 }
