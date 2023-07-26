@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "module": "esnext",
-    "lib": ["dom", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "declaration": true,
-    "outDir": "./dist",
     "noEmit": false,
     "strict": true,
     "strictNullChecks": true,
@@ -28,8 +27,8 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "jsx": "preserve",
-    "baseUrl": "src",
+    "outDir": "./dist"
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "src/**/*.module.css"],
   "exclude": ["node_modules"]
 }

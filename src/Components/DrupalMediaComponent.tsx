@@ -1,7 +1,12 @@
-import dynamic from "next/dynamic";
 import {DrupalMedia} from "../Entity";
-import {DrupalUtils} from "../Utils";
+import DrupalUtils from "../Utils/DrupalUtils";
+import SearchParamsDefault from "../SearchParams/SearchParamsDefault";
 
-export default function DrupalMediaComponent({media}: {media: DrupalMedia}) {
-    return DrupalUtils.getTemplate(media)
+interface MediaProps {
+    media: DrupalMedia,
+    viewmode?: string,
+    searchParams?: SearchParamsDefault
+}
+export default function DrupalMediaComponent({media, viewmode = 'default', searchParams}: MediaProps) {
+    return DrupalUtils.resolveTemplate(media, viewmode, searchParams)
 }

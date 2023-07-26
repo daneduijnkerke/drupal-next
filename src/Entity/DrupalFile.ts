@@ -1,6 +1,6 @@
 import {JsonApiResource, JsonApiResponse} from "./JsonApi";
 import {DrupalEntity, DrupalEntityInterface} from "./DrupalEntity";
-import {DrupalUtils} from "../Utils";
+import DrupalUtils from "../Utils/DrupalUtils";
 
 export interface DrupalFileInterface extends DrupalEntityInterface {
     fid: string | null;
@@ -11,6 +11,9 @@ export interface DrupalFileInterface extends DrupalEntityInterface {
         value: string | null;
         url: string | null;
         absolutePath: string | null;
+    }
+    image_style_uri?: {
+        [key: string]: string
     }
 
     getAbsolutePath(): string | null;
@@ -26,6 +29,7 @@ export class DrupalFile extends DrupalEntity implements DrupalFileInterface {
         url: null,
         absolutePath: null,
     }
+    image_style_uri = {};
 
     override key_conversions = {
         'drupal_internal__fid': 'fid',

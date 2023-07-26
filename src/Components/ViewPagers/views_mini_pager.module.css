@@ -1,0 +1,43 @@
+.pager_items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    text-align: center;
+}
+
+.pager_item {
+    display: flex;
+    align-items: center;
+    margin: 0 0.313rem;
+    justify-content: center;
+    align-content: center;
+    font-weight: bold;
+}
+
+.pager_current {
+    border-radius: 100%;
+    padding: 0.625rem;
+    background-color: #2929ff;
+    width: 1.875rem;
+    height: 1.875rem;
+}
+
+.pager_link {
+    width: 1.875rem;
+    height: 1.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+
+.pager_link:hover .arrow_icon {
+    color: #2929ff;
+}
+
+.arrow_icon {
+    font-size: 15px;
+}

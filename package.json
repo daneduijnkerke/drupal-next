@@ -14,23 +14,51 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "css": "copyfiles -u 1 src/**/*.html src/**/*.css dist/"
   },
-  "keywords": ["drupal", "nextjs", "next", "js", "json", "api", "JSON:API", "headless"],
+  "keywords": [
+    "drupal",
+    "nextjs",
+    "next",
+    "js",
+    "json",
+    "api",
+    "JSON:API",
+    "headless"
+  ],
   "author": "Dane Duijnkerke",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.4.1",
+    "copyfiles": "^2.4.1",
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "next": "^13.4"
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@types/react": "^18.2.15",
+    "eslint": "8.44.0",
+    "eslint-config-next": "13.4.9",
+    "next": "13.4.10",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.1.6"
   },
   "exports": {
     ".": "./dist/index.js",
+    "./DrupalClient": {
+      "import": "./dist/DrupalClient.js",
+      "require": "./dist/DrupalClient.d.ts"
+    },
     "./Entity/*": {
       "import": "./dist/Entity/*.js",
       "require": "./dist/Entity/*.d.ts"
+    },
+    "./SearchParams/*": {
+      "import": "./dist/SearchParams/*.js",
+      "require": "./dist/SearchParams/*.d.ts"
     },
     "./Components/*": {
       "import": "./dist/Components/*.jsx",
@@ -39,10 +67,6 @@
     "./Utils/*": {
       "import": "./dist/Utils/*.jsx",
       "require": "./dist/Utils/*.d.ts"
-    },
-    "./client": {
-      "import": "./dist/client.js",
-      "require": "./dist/client.d.ts"
     }
   }
 }

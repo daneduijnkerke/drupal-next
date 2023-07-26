@@ -1,4 +1,4 @@
-export * from "./client"
+export * from "./DrupalClient"
 export * from "./Components"
 export * from "./Entity"
 export * from "./Templates"

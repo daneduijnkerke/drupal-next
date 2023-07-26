@@ -1,6 +1,13 @@
 import {DrupalView} from "../Entity";
-import {DrupalUtils} from "../Utils/DrupalUtils";
+import DrupalUtils from "../Utils/DrupalUtils";
+import SearchParamsView from "../SearchParams/SearchParamsView";
 
-export default function DrupalViewComponent({view}: {view: DrupalView}) {
-    return DrupalUtils.getTemplate(view)
+interface ViewProps {
+    view: DrupalView,
+    viewmode?: string,
+    searchParams?: SearchParamsView
+}
+
+export default function DrupalViewComponent({view, viewmode = 'default', searchParams}: ViewProps) {
+    return DrupalUtils.resolveTemplate(view, viewmode, searchParams);
 }

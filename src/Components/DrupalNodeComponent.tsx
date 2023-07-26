@@ -1,7 +1,12 @@
-
 import {DrupalNode} from "../Entity";
-import {DrupalUtils} from "../Utils";
+import DrupalUtils from "../Utils/DrupalUtils";
+import SearchParamsDefault from "../SearchParams/SearchParamsDefault";
 
-export default function DrupalNodeComponent({node}: {node: DrupalNode}) {
-    return DrupalUtils.getTemplate(node)
+interface NodeProps {
+    node: DrupalNode,
+    viewmode?: string,
+    searchParams?: SearchParamsDefault
+}
+export default async function DrupalNodeComponent({node, viewmode = 'default', searchParams}: NodeProps) {
+    return DrupalUtils.resolveTemplate(node, viewmode, searchParams);
 }

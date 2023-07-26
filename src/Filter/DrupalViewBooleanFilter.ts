@@ -19,7 +19,7 @@ export class DrupalViewBooleanFilter extends DrupalViewFilter implements DrupalV
 
         filterOption[`filter[${this.id}][condition][value]`] = this.value;
         filterOption[`filter[${this.id}][condition][path]`] = this.field;
-        filterOption[`filter[${this.id}][condition][operator]`] = 'IN';
+        filterOption[`filter[${this.id}][condition][operator]`] = '=';
 
         return filterOption;
     }

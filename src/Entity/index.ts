@@ -7,3 +7,4 @@ export * from "./DrupalLink";
 export * from "./DrupalMenuItem";
 export * from "./DrupalEntityCollection";
 export * from "./DrupalView";
+export * from "./JsonApi";

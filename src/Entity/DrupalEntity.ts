@@ -1,4 +1,4 @@
-import {DrupalClient} from "../client";
+import DrupalClient from "../DrupalClient";
 import {JsonApiResource, JsonApiResponse} from "./JsonApi";
 
 export interface DrupalEntityInterface {
@@ -39,10 +39,25 @@ export class DrupalEntity implements DrupalEntityInterface {
     public has(field: string) {
         return this.fields.hasOwnProperty(field);
     }
+    public notEmpty(field: string) {
+        if (this.has(field) && this.fields[field]) {
+            let value = this.fields[field];
+            if (this.fields[field].hasOwnProperty('data')) {
+                value = this.fields[field].data
+            }
+
+            return value !== '' && value !== null
+        }
+        return false;
+    }
 
     public async get(field: string) {
         if (!this.has(field)) {
             throw Error(field + ' does not exist on entity ' + this.type + '.');
+        }
+
+        if (!this.notEmpty(field)) {
+            return null;
         }
 
         // Field is a reference field, return the reference(s).
@@ -67,8 +82,6 @@ export class DrupalEntity implements DrupalEntityInterface {
     }
 
     public async handleReference(reference): Promise<DrupalEntity> {
-        const client = new DrupalClient();
-
         const resource = reference.type.split('--')[0];
         const bundle = reference.type.split('--')[1];
         const id = reference.id;
@@ -77,19 +90,19 @@ export class DrupalEntity implements DrupalEntityInterface {
         // #TODO: Dynamically get correct entity somehow?
         switch(resource) {
             case 'media': {
-                entity = await client.getMedia(bundle, id);
+                entity = await DrupalClient.getMedia(bundle, id);
                 break;
             }
             case 'paragraph': {
-                entity = await client.getParagraph(bundle, id);
+                entity = await DrupalClient.getParagraph(bundle, id);
                 break;
             }
             case 'view': {
-                entity = await client.getView(id);
+                entity = await DrupalClient.getViewDisplayMode(id, reference.meta);
                 break;
             }
             default: {
-                entity = await client.getResource(resource + '/' + bundle, id);
+                entity = await DrupalClient.getResource(resource + '/' + bundle, id);
                 break;
             }
         }
@@ -98,7 +111,7 @@ export class DrupalEntity implements DrupalEntityInterface {
     }
 
     public fill(res: JsonApiResponse | JsonApiResource) {
-        // Convert Respones to a Resource.
+        // Convert Responses to a Resource.
         let resource = res;
         if ("data" in res && !Array.isArray(res.data)) {
             resource = <JsonApiResource>res.data

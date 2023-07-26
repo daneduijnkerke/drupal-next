@@ -8,7 +8,7 @@ import {DrupalViewNumericFilter} from "../Filter/DrupalViewNumericFilter";
 import {DrupalViewBundleFilter} from "../Filter/DrupalViewBundleFilter";
 import {DrupalEntityCollection} from "./DrupalEntityCollection";
 import {DrupalNode} from "./DrupalNode";
-import {DrupalClient} from "../client";
+import DrupalClient from "../DrupalClient";
 
 export interface DrupalViewInterface extends DrupalEntityInterface {
     vid: string | null;
@@ -87,6 +87,7 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
     sorts: Record<string, DrupalViewSorting> = {};
     pager: any = null;
     view_mode: string | null = null;
+    cross_bundles: boolean = false;
 
     filter_class_map = {
         'default': DrupalViewFilter,
@@ -102,9 +103,15 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
     };
 
     constructor(resource: JsonApiResponse | JsonApiResource) {
+        let cross_bundles = false;
         super(resource);
         this.fill(resource);
         this.fillViewData(resource);
+
+        if (this.filters.hasOwnProperty('type') && Object.values(this.filters['type'].value).length > 1) {
+            cross_bundles = true;
+        }
+        this.cross_bundles = cross_bundles;
     }
 
     private getFilters(filters): Record<string, DrupalViewFilter> {
@@ -184,17 +191,21 @@ export class DrupalView extends DrupalEntity implements DrupalViewInterface {
     }
 
     private getResource() {
+        if (this.cross_bundles) {
+            return `${this.sub_entity}`;
+        }
+
         if (this.filters.hasOwnProperty('type')) {
             const bundle = Object.values(this.filters['type']['value'])[0] ?? this.sub_entity;
             return `${this.sub_entity}/${bundle}`
         }
+
         return `${this.sub_entity}/${this.sub_entity}`;
     }
 
     public async getResults(page: number = 0) {
-        page = page + 1;
-        const client = new DrupalClient();
-        const response = await client.getResource(this.getResource(), '', {...this.getFilterOptions(), ...this.getSortOptions()});
+        const page_option = {'page': String(page)}
+        const response = await DrupalClient.getResource(this.getResource(), '', {...this.getFilterOptions(), ...this.getSortOptions(), ...page_option});
         return new DrupalEntityCollection('node', response, DrupalNode);
     }
 }
