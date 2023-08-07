@@ -20,13 +20,11 @@ class DrupalClientService {
     public templatesDir: string
     public templatesAlias: string
     public theme;
-    public breakpoints;
 
     constructor() {
         console.log("IK INIT NU!");
         const drupalConfig = DrupalUtils.getConfig();
         const drupalTheme = DrupalUtils.getTheme();
-        const breakPoints = DrupalUtils.getBreakpoints();
 
         this.protocol = drupalConfig.protocol
         this.host = drupalConfig.host
@@ -36,7 +34,6 @@ class DrupalClientService {
         this.templatesDir = drupalConfig.templatesDir
         this.templatesAlias = drupalConfig.templatesAlias
         this.theme = drupalTheme || {}
-        this.breakpoints = breakPoints || {}
     }
 
     public getTheme(){

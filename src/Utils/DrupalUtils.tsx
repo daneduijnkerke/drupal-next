@@ -14,10 +14,6 @@ export default class DrupalUtils {
         "view": ViewDefault,
     };
 
-    static getBreakpoints() {
-        return require('/drupal_next.breakpoints.js');
-    }
-
     static getTheme() {
         return  require('/drupal_next.theme.js');
         // const fs = require('fs');

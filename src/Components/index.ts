@@ -1,5 +1,7 @@
 export * from "./DrupalParagraphComponent"
 export * from "./DrupalNodeComponent"
 export * from "./DrupalMediaComponent"
+export * from "./DrupalImageComponent"
+export * from "./DrupalResponsiveImageComponent"
 export * from "./DrupalViewComponent"
 export * from "./DrupalViewResultRowComponent"

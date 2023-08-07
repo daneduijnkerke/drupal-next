@@ -12,7 +12,10 @@ export interface DrupalFileInterface extends DrupalEntityInterface {
         url: string | null;
         absolutePath: string | null;
     }
-    image_style_uri?: {
+    image_styles?: {
+        [key: string]: string
+    }
+    responsive_image_styles?: {
         [key: string]: string
     }
 
@@ -29,7 +32,8 @@ export class DrupalFile extends DrupalEntity implements DrupalFileInterface {
         url: null,
         absolutePath: null,
     }
-    image_style_uri = {};
+    image_styles = {};
+    responsive_image_styles = {};
 
     override key_conversions = {
         'drupal_internal__fid': 'fid',

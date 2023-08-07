@@ -1,4 +1,6 @@
 export * from "./NodeDefault"
 export * from "./ParagraphDefault"
 export * from "./MediaDefault"
+export * from "./MediaImage"
+export * from "./ResponsiveImage"
 export * from "./ViewDefault"

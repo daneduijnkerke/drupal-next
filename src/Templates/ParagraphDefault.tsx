@@ -1,8 +1,6 @@
 import {DrupalParagraph} from "../Entity";
 import DrupalUtils from "../Utils/DrupalUtils";
-import SearchParamsDefault from "../SearchParams/SearchParamsDefault";
-
-export default async function ParagraphDefault(entity: DrupalParagraph, searchParams: SearchParamsDefault = {}) {
+export default async function ParagraphDefault(entity: DrupalParagraph) {
     const paragraph = entity;
 
     const title = (
