@@ -1,4 +1,4 @@
-# Your NPM Package Name
+# drupal-next
 
 A package to connect Drupal's JSON:API with a NextJS frontend. This package contains tools to make it easier to develop a fancy frontend in NextJS with a Drupal headless backend. The package normalizes the data and contains dynamic templating to theme every entity.
 
