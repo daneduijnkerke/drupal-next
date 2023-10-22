@@ -25,7 +25,7 @@ In the project root, create a **_drupal_next.config.json_** file containing the 
 }
 ```
 * Set protocol to desired protocol (http or https)
-* Set host to desired hostname, localhost or project.local for example.
+* Set host to desired hostname pointing to where your backend is located, localhost or project.local for example.
 * Set api as the prefix used in Drupal, usually /jsonapi/ by default.
 * Keep router as it is. This is used from the contrib module "decoupled_router"
 * Remove the bearer line, or set it to null when you are **not** using basic auth.
