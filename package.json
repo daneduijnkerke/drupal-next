@@ -1,6 +1,6 @@
 {
   "name": "drupal-next",
-  "version": "1.0.0",
+  "version": "0.4.0-beta",
   "description": "A Next.js library for Drupal's JSON:API.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,6 +29,10 @@
   ],
   "author": "Dane Duijnkerke",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daneduijnkerke/drupal-next/issues"
+  },
+  "homepage": "https://github.com/daneduijnkerke/drupal-next#readme",
   "devDependencies": {
     "@types/node": "^20.4.1",
     "copyfiles": "^2.4.1",
