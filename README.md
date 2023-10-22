@@ -47,6 +47,15 @@ const nextConfig = {
 module.exports = nextConfig
 ```
 
+## Installation backend
+To make this package work with your backend. Some core & contrib modules might be required.
+* serialization
+* jsonapi
+* (optional) jsonapi_extras
+* decoupled_router
+  * This is used for the node resolving
+* jsonapi_views
+  * Used to fetch a view resource based on a display id of the view.
 
 ## Usage
 
@@ -327,6 +336,8 @@ return (
     </section>
   );
 ```
+* **DrupalUserComponent**
+  * Coming soon!
 
 ## Overview of usable entities currently in drupal-next
 The documentation is not complete yet. You can debug every entity by using a console.log on the entity to see its available fields. Below are some examples which should get you going.
@@ -426,3 +437,7 @@ export class DrupalMedia extends DrupalEntity implements DrupalMediaInterface {
 * DrupalNode
 * DrupalParagraph
 * DrupalView
+  * Has basic view features, it's recommended to use DrupalViewDisplay but it requires jsonapi_views in your backend.
+* DrupalViewDisplay
+  * More advanced component to render Drupal Views, works with different view displays, filters, sorting and pager.
+* DrupalUser (COMING SOON)
