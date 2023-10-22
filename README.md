@@ -1,6 +1,6 @@
 # Your NPM Package Name
 
-A package to connect Drupal's JSON:API with a NextJS frontend. This package contains tools to make it easier to develop a fancy frontend in NextJS with a Drupal headless backend. The package normalizes the data and containers dynamic templating to theme every entity.
+A package to connect Drupal's JSON:API with a NextJS frontend. This package contains tools to make it easier to develop a fancy frontend in NextJS with a Drupal headless backend. The package normalizes the data and contains dynamic templating to theme every entity.
 
 [![NPM Version](https://img.shields.io/npm/v/drupal-next.svg)](https://www.npmjs.com/package/drupal-next)
 [![License](https://img.shields.io/npm/l/drupal-next.svg)](https://github.com/daneduijnkerke/drupal-next/blob/master/LICENSE)
