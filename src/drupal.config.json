@@ -3,5 +3,6 @@
   "host": "",
   "api": "",
   "router": "/router/translate-path?path=",
-  "templatesDir": ""
+  "templatesDir": "",
+  "bearer": ""
 }

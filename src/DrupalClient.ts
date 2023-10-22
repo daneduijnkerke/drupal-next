@@ -20,9 +20,11 @@ class DrupalClientService {
     public templatesDir: string
     public templatesAlias: string
     public theme;
+    public bearer: string;
 
     constructor() {
-        console.log("IK INIT NU!");
+        // #TODO Check multiple intis, should be once with singleton.
+        console.log("INIT!");
         const drupalConfig = DrupalUtils.getConfig();
         const drupalTheme = DrupalUtils.getTheme();
 
@@ -34,6 +36,8 @@ class DrupalClientService {
         this.templatesDir = drupalConfig.templatesDir
         this.templatesAlias = drupalConfig.templatesAlias
         this.theme = drupalTheme || {}
+
+        this.bearer = drupalConfig.bearer || null
     }
 
     public getTheme(){
@@ -48,7 +52,13 @@ class DrupalClientService {
             id = '/' + id;
         }
 
-        const response = await fetch(this.basePath + resource + id + DrupalUtils.buildQueryOptions(options));
+        let requestOptions = {};
+
+        if (this.bearer) {
+            requestOptions['headers'] = {'Authorization': `Basic ${this.bearer}`};
+        }
+
+        const response = await fetch(this.basePath + resource + id + DrupalUtils.buildQueryOptions(options), requestOptions);
 
         if (response.status === 404) throw new Error('Resource ' + resource + id + ' not found.');
         if (response.status === 403) throw new Error('Access denied for ' + resource + '.');

@@ -16,22 +16,10 @@ export default class DrupalUtils {
 
     static getTheme() {
         return  require('/drupal_next.theme.js');
-        // const fs = require('fs');
-        // const path = require('path');
-        // const fullModulePath = path.resolve('drupal_next.theme.js');
-        //
-        // if (fs.existsSync(fullModulePath)) {
-        // } else {
-        //     console.error('Theme file not found:', fullModulePath);
-        // }
-        //
-        // return {};
     }
 
     static getConfig() {
         return require('/drupal_next.config.json');
-        // const file = this.getConfigFile();
-        // return this.readJsonFile(file);
     }
 
     static ucfirst(str: string): string {
@@ -80,57 +68,4 @@ export default class DrupalUtils {
 
         return default_template(entity, searchParams);
     }
-
-    static getTemplate(entity, viewmode='') {
-        let kak = entity;
-        let kakje = viewmode;
-        kak = kak + undefined;
-        kakje = kakje + '';
-        return;
-        // const templateEntity = entity.constructor.name;
-        // const baseTemplate = entity.entity;
-        // const bundle = entity.bundle;
-        //
-        // const templatesDir = DrupalUtils.getTemplatesDir() + '/' + templateEntity + '/';
-        // // Check with viewmode.
-        // if (viewmode && bundle && fs.existsSync(templatesDir + baseTemplate + '_' + bundle + '_' + viewmode + '.tsx')) {
-        //     const Content = dynamic<ContentProps>(() => import('app/DrupalTemplates/' + templateEntity + '/' + baseTemplate + '_' + bundle + '_' + viewmode), {
-        //         ssr: true,
-        //         loading: () => <p>Loading...</p>,
-        //     })
-        //
-        //     return <Content entity={entity}/>;
-        // }
-        // // Check without viewmode.
-        // if (bundle && fs.existsSync(templatesDir + baseTemplate + '_' + bundle + '.tsx')) {
-        //     const Content = dynamic<ContentProps>(() => import('app/DrupalTemplates/' + templateEntity + '/' + baseTemplate + '_' + bundle), {
-        //         ssr: true,
-        //         loading: () => <p>Loading...</p>,
-        //     })
-        //
-        //     return <Content entity={entity}/>;
-        // }
-        //
-        // // Temp fix for client components.
-        // // if (baseTemplate === 'view') {
-        // //     // Default node template.
-        // //     return <View entity={entity}/>;
-        // // }
-        //
-        // // Default node template.
-        // const Content = dynamic<ContentProps>(() => import('../Templates/' + baseTemplate), {
-        //     ssr: true,
-        //     loading: () => (<p>Loading...</p>),
-        // })
-        //
-        //
-        // return <Content entity={entity}/>;
-    }
-
 }
-// interface ContentProps {
-//     entity: any
-// }
-// interface ContentViewProps {
-//     entity: DrupalView
-// }
